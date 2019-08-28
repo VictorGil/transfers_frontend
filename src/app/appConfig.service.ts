@@ -10,7 +10,7 @@ export class AppConfigService {
 
   constructor(private httpClient: HttpClient) { }
 
-  loadAppConfig(): Promise<string | void> {
+  public loadAppConfig(): Promise<string | void> {
     return this.httpClient.get('/assets/config.json')
       .toPromise()
       .then(data => {
@@ -18,7 +18,7 @@ export class AppConfigService {
     });
   }
 
-  get webSocketsServerUrl(): string {
+  public get webSocketsServerUrl(): string {
     if (!this.appConfig) {
       throw Error('Config file not loaded!');
     }
