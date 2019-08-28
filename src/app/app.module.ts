@@ -6,6 +6,10 @@ import { AppConfigService } from './appConfig.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AccountBalanceFormComponent } from './account-balance-form/account-balance-form.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -13,7 +17,11 @@ import { AccountBalanceFormComponent } from './account-balance-form/account-bala
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {
