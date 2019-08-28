@@ -1,23 +1,48 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { Observable, Observer} from 'rxjs';
 import { AppConfigService } from './appConfig.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketsService {
-
-  private webSocketsServerUrl: string;
+export class WebSocketsService {
+  private webSocket: WebSocket;
 
   constructor(private appConfigService: AppConfigService) { }
 
-  OnInit(): void {
-    this.webSocketsServerUrl = this.appConfigService.webSocketsServerUrl;
+  public start(): void {
+    this.connect(this.appConfigService.webSocketsServerUrl);
   }
 
-  public connect(url: string): void {
-
+  public stop(): void {
+    if (this.webSocket != null) {
+      this.webSocket.close();
+    }
   }
+
+  private connect(url: string): void {
+    this.webSocket = new WebSocket(url);
+
+    this.webSocket.onopen = function(messageEvent: MessageEvent) {
+      // tslint:disable-next-line:no-console
+      console.info('WebSocket connection has been opened: ', messageEvent);
+    };
+
+    this.webSocket.onmessage = function(messageEvent: MessageEvent) {
+      // tslint:disable-next-line:no-console
+      console.debug('WebSocket message received: ', messageEvent);
+    };
+
+    this.webSocket.onerror = function(messageEvent: MessageEvent) {
+      console.error('WebSocket error observed: ', messageEvent);
+    };
+
+    this.webSocket.onclose = function(closeEvent: CloseEvent) {
+      // tslint:disable-next-line:no-console
+      console.info('WebSocket connection has been closed: ', closeEvent);
+    };
+  }
+
   public subscribeToBalanceUpdates(accountIds: Array<string>): void {
 
   }
