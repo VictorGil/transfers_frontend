@@ -4,10 +4,12 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AppConfigService } from './appConfig.service';
 import { HttpClientModule } from '@angular/common/http';
+import { AccountBalanceFormComponent } from './account-balance-form/account-balance-form.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AccountBalanceFormComponent
   ],
   imports: [
     BrowserModule,
