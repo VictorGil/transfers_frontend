@@ -1,9 +1,9 @@
-.container01 {
-    display: flex;
-    flex-direction: column;
-  }
+.div-01 {
+  display: flex;
+  flex-direction: column;
+}
   
-  .container01 > * {
-    width: 40%;
-  }
+.div-01 > * {
+  width: 10%;
+}
   
