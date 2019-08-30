@@ -8,7 +8,8 @@ import { WebSocketsService } from './websockets.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
   private webSocketsService: WebSocketsService;
-  readonly title = 'app';
+
+  readonly title = 'the Transfers UI';
 
   constructor(webSocketsService: WebSocketsService) {
     this.webSocketsService = webSocketsService;

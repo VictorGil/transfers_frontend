@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { Observable, Observer} from 'rxjs';
+import { Observable, Observer, Subject} from 'rxjs';
 
 import { AppConfigService } from './appConfig.service';
 import { MessageWrapper } from './entities/messageWrapper';
@@ -15,9 +15,32 @@ import { Transfer } from './entities/transfer';
 export class WebSocketsService {
   private webSocket: WebSocket;
 
+  public balanceObservable: Observable<AccountBalance>;
+  private balanceObserver: Observer<AccountBalance>;
+  private balanceSubject: Subject<AccountBalance>;
+
+  public transferObservable: Observable<Transfer>;
+  private transferObserver: Observer<Transfer>;
+  private transferSubject: Subject<Transfer>;
+
   constructor(private appConfigService: AppConfigService) { }
 
   public start(): void {
+
+    const onNewBalanceSubscription = function(observer: Observer<AccountBalance>): void {
+        console.debug('New "account balance" subscription');
+        this.balanceSubject.subscribe(observer);
+    };
+
+    const onNewTransferSubscription = function(observer: Observer<Transfer>): void {
+        console.debug('New "transfer" subscription');
+        this.transferSubject.subscribe(observer);
+    };
+
+    this.balanceObservable = new Observable (onNewBalanceSubscription);
+    this.transferObservable = new Observable(onNewTransferSubscription);
+
+    console.debug('Going to connect to the websockets server');
     this.connect(this.appConfigService.webSocketsServerUrl);
   }
 
@@ -31,14 +54,12 @@ export class WebSocketsService {
     this.webSocket = new WebSocket(url);
 
     this.webSocket.onopen = function(messageEvent: MessageEvent) {
-      // tslint:disable-next-line:no-console
       console.info('WebSocket connection has been opened: %o', messageEvent);
     };
 
-    this.webSocket.onmessage = function(messageEvent: MessageEvent) {
+    const onMessage =  function(messageEvent: MessageEvent) {
       const jsonReceived: string = messageEvent.data;
 
-      // tslint:disable-next-line:no-console
       console.debug('WebSocket message received: %s', jsonReceived);
 
       let messageWrapper: MessageWrapper;
@@ -66,8 +87,9 @@ export class WebSocketsService {
                 messageWrapper.payload);
             return;
           }
-        // tslint:disable-next-line:no-console
-        console.debug('AccountBalance message received: %o', accountBalance);
+
+          console.debug('AccountBalance message received: %o', accountBalance);
+          this.balanceSubject.next(accountBalance);
 
       } else {
         if (messageWrapper.type === MessageType.TRANSFER_DATA) {
@@ -80,8 +102,8 @@ export class WebSocketsService {
           }
 
           const transfer: Transfer = new Transfer(transferReceived);
-          // tslint:disable-next-line:no-console
           console.debug('Transfer message received: %o', transfer);
+          this.transferSubject.next(transfer);
 
         } else {
           console.error('Invalid message type: %s', messageWrapper.type);
@@ -89,12 +111,13 @@ export class WebSocketsService {
       }
     };
 
+    this.webSocket.onmessage = onMessage;
+
     this.webSocket.onerror = function(messageEvent: MessageEvent) {
       console.error('WebSocket error observed: %o', messageEvent);
     };
 
     this.webSocket.onclose = function(closeEvent: CloseEvent) {
-      // tslint:disable-next-line:no-console
       console.info('WebSocket connection has been closed: %o', closeEvent);
     };
   }
