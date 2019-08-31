@@ -1,8 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl } from '@angular/forms';
-
-import { Observer} from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Component } from '@angular/core';
 
 import { WebSocketsService } from '../websockets.service';
 
@@ -11,28 +7,11 @@ import { WebSocketsService } from '../websockets.service';
   templateUrl: './account-balance-form.component.html',
   styleUrls: ['./account-balance-form.component.css']
 })
-export class AccountBalanceFormComponent implements OnInit, OnDestroy {
-  accountId = new FormControl('');
-
+export class AccountBalanceFormComponent {
   private webSocketsService: WebSocketsService;
 
   constructor(webSocketsService: WebSocketsService) {
     this.webSocketsService = webSocketsService;
-  }
-
-  ngOnInit(): void {
-    const onNewAccountId = function(accountId: string): void {
-        console.debug('New "accountId": %s', accountId);
-    };
-
-    this.accountId.valueChanges.pipe(
-            debounceTime(500),
-            distinctUntilChanged())
-        .subscribe(onNewAccountId);
-  }
-
-  ngOnDestroy(): void {
-
   }
 
   onUserInputChange({ target }) {
