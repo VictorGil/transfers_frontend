@@ -16,6 +16,6 @@ export class AccountBalanceFormComponent {
 
   onUserInputChange({ target }) {
     console.debug('Value of the input change event: %o', target.value);
-    console.debug('Type of the input change event: %o', typeof target.value);
+    // console.debug('Type of the input change event: %o', typeof target.value);
   }
 }
