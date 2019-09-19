@@ -7,7 +7,7 @@ export class Transfer {
   readonly transferTS: number;
   readonly transferTSstring: string;
 
-constructor(transferReceived: TransferReceived) {
+  constructor(transferReceived: TransferReceived) {
 
     this.id = transferReceived.id;
     this.accountId = transferReceived.accountId;

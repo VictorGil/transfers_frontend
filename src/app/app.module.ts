@@ -9,11 +9,13 @@ import { AccountBalanceFormComponent } from './account-balance-form/account-bala
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule, MatInputModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DisplayBalanceComponent } from './display-balance/display-balance.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AccountBalanceFormComponent
+    AccountBalanceFormComponent,
+    DisplayBalanceComponent
   ],
   imports: [
     BrowserModule,
