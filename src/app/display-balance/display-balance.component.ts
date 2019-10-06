@@ -14,6 +14,8 @@ import { Observer} from 'rxjs';
  export class DisplayBalanceComponent implements OnInit {
 
   balance: string;
+  showBalance: boolean;
+
   private currentBalanceVersion: number;
   private webSocketsService: WebSocketsService;
 
@@ -64,7 +66,11 @@ import { Observer} from 'rxjs';
     console.debug('Account Balance received through the observer:\n%o', accountBalance);
 
     if (accountBalance.version > this.currentBalanceVersion) {
-      this.balance = 'Balance: ' + String(accountBalance.balance);
+      if (this.currentBalanceVersion === -1) {
+        this.showBalance = true;
+      }
+
+      this.balance = String(accountBalance.balance);
       this.currentBalanceVersion = accountBalance.version;
     }
   }
