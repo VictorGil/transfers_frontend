@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { WebSocketsService } from '../websockets.service';
+import { InputDisplayCommService} from '../inputDisplayComm.service';
 
 import { AccountBalance } from '../entities/accountBalance';
 
@@ -17,18 +18,23 @@ import { Observer} from 'rxjs';
   showBalance: boolean;
 
   private currentBalanceVersion: number;
-  private webSocketsService: WebSocketsService;
 
-  constructor(webSocketsService: WebSocketsService) {
+  private webSocketsService: WebSocketsService;
+  private inputDisplayCommService: InputDisplayCommService;
+
+  constructor(webSocketsService: WebSocketsService,
+      inputDisplayCommService: InputDisplayCommService) {
+
     this.webSocketsService = webSocketsService;
+    this.inputDisplayCommService = inputDisplayCommService;
   }
 
   ngOnInit(): void {
     this.currentBalanceVersion = -1;
 
-    console.debug('Creating the account balance response observer');
     // we need the "self" constant because we cannot use "this" inside the functions below
     const self = this;
+
     const balanceResponsesObserver: Observer<AccountBalance> = {
       next: function(accountBalance: AccountBalance): void {
         self.process(accountBalance);
@@ -60,6 +66,22 @@ import { Observer} from 'rxjs';
     };
 
     this.webSocketsService.subscribeToBalanceUpdates(balanceUpdatesObserver);
+
+    const clearBalanceObserver: Observer<void> = {
+      next: function(): void {
+        self.clearBalance();
+      },
+
+      error: function(err: any): void {
+        console.error('Error: %o', err);
+      },
+
+      complete: function(): void {
+        console.log('Complete called on the clearBalanceObserver');
+      }
+    };
+
+    this.inputDisplayCommService.subscribeToClearBalance(clearBalanceObserver);
   }
 
   private process(accountBalance: AccountBalance): void {
@@ -73,5 +95,12 @@ import { Observer} from 'rxjs';
       this.balance = String(accountBalance.balance);
       this.currentBalanceVersion = accountBalance.version;
     }
+  }
+
+  private clearBalance(): void {
+    console.log('Going to clear the balance displayed');
+    this.showBalance = false;
+    this.currentBalanceVersion = -1;
+    this.balance = '';
   }
 }

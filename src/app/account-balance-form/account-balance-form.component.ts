@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { WebSocketsService } from '../websockets.service';
+import { InputDisplayCommService} from '../inputDisplayComm.service';
 
 @Component({
   selector: 'app-account-balance-form',
@@ -10,15 +11,20 @@ import { WebSocketsService } from '../websockets.service';
 export class AccountBalanceFormComponent {
 
   private webSocketsService: WebSocketsService;
+  private inputDisplayCommService: InputDisplayCommService;
 
-  constructor(webSocketsService: WebSocketsService) {
+  constructor(webSocketsService: WebSocketsService,
+    inputDisplayCommService: InputDisplayCommService) {
+
     this.webSocketsService = webSocketsService;
+    this.inputDisplayCommService = inputDisplayCommService;
   }
 
   onUserInputChange({ target }) {
     console.debug('Value of the input change event: %o', target.value);
     // console.debug('Type of the input change event: %o', typeof target.value);
 
+    this.inputDisplayCommService.clearBalance();
     this.webSocketsService.sendAccountBalanceRequestAndSubscription(target.value);
   }
 }
