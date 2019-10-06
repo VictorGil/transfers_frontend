@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { Observable, Observer, Subject} from 'rxjs';
+import { Observer, Subject} from 'rxjs';
 
 import { AppConfigService } from './appConfig.service';
 import { MessageWrapper } from './entities/messageWrapper';
@@ -39,8 +39,12 @@ export class WebSocketsService {
     }
   }
 
-  public subscribeToBalanceResponse(observer: Observer<AccountBalance>): void {
+  public subscribeToBalanceResponses(observer: Observer<AccountBalance>): void {
     this.balanceResponseSubject.subscribe(observer);
+  }
+
+  public subscribeToBalanceUpdates(observer: Observer<AccountBalance>): void {
+    this.balanceUpdateSubject.subscribe(observer);
   }
 
   private connect(url: string): void {
@@ -124,18 +128,29 @@ export class WebSocketsService {
     };
   }
 
-  public sendAccountBalanceRequest(accountId: string): void {
+  public sendAccountBalanceRequestAndSubscription(accountId: string): void {
+    this.sendAccountBalanceRequest(accountId);
+    this.sendAccountBalanceSubscriptionRequest(accountId);
+  }
+
+  private sendAccountBalanceRequest(accountId: string): void {
     const request: AccountBalanceRequest = new AccountBalanceRequest(accountId);
     const message: MessageWrapper = new MessageWrapper(MessageType.BALANCE_DATA_REQUEST, request);
+    this.send(message);
+  }
+
+  private sendAccountBalanceSubscriptionRequest(accountId: string): void {
+    const request: AccountBalanceRequest = new AccountBalanceRequest(accountId);
+    const message: MessageWrapper = new MessageWrapper(MessageType.BALANCE_DATA_SUBSCRIPTION, request);
+    this.send(message);
+  }
+
+  private send(message: MessageWrapper) {
     try {
       this.webSocket.send(JSON.stringify(message));
     } catch (error) {
       console.error('Sending message failed.\nMessage:\n%o\nError:\n%o', message, error);
     }
-  }
-
-  public subscribeToBalanceUpdates(accountIds: Array<string>): void {
-    // TODO
   }
 
   public subscribeToNewTransfers(accountIds: Array<string>): void {

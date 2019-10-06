@@ -12,6 +12,9 @@ import { Observer} from 'rxjs';
   styleUrls: ['./display-balance.component.css']
 })
  export class DisplayBalanceComponent implements OnInit {
+
+  balance: string;
+  private currentBalanceVersion: number;
   private webSocketsService: WebSocketsService;
 
   constructor(webSocketsService: WebSocketsService) {
@@ -19,10 +22,12 @@ import { Observer} from 'rxjs';
   }
 
   ngOnInit(): void {
+    this.currentBalanceVersion = -1;
+
     console.debug('Creating the account balance response observer');
     // we need the "self" constant because we cannot use "this" inside the functions below
     const self = this;
-    const balanceResponseObserver: Observer<AccountBalance> = {
+    const balanceResponsesObserver: Observer<AccountBalance> = {
       next: function(accountBalance: AccountBalance): void {
         self.process(accountBalance);
       },
@@ -36,10 +41,31 @@ import { Observer} from 'rxjs';
       }
     };
 
-    this.webSocketsService.subscribeToBalanceResponse(balanceResponseObserver);
+    this.webSocketsService.subscribeToBalanceResponses(balanceResponsesObserver);
+
+    const balanceUpdatesObserver: Observer<AccountBalance> = {
+      next: function(accountBalance: AccountBalance): void {
+        self.process(accountBalance);
+      },
+
+      error: function(err: any): void {
+        console.error('Error: %o', err);
+      },
+
+      complete: function(): void {
+        console.log('No more account balance updates');
+      }
+    };
+
+    this.webSocketsService.subscribeToBalanceUpdates(balanceUpdatesObserver);
   }
 
   private process(accountBalance: AccountBalance): void {
     console.debug('Account Balance received through the observer:\n%o', accountBalance);
+
+    if (accountBalance.version > this.currentBalanceVersion) {
+      this.balance = 'Balance: ' + String(accountBalance.balance);
+      this.currentBalanceVersion = accountBalance.version;
+    }
   }
 }

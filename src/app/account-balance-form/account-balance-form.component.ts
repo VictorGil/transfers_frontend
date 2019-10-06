@@ -8,6 +8,7 @@ import { WebSocketsService } from '../websockets.service';
   styleUrls: ['./account-balance-form.component.css']
 })
 export class AccountBalanceFormComponent {
+
   private webSocketsService: WebSocketsService;
 
   constructor(webSocketsService: WebSocketsService) {
@@ -18,6 +19,6 @@ export class AccountBalanceFormComponent {
     console.debug('Value of the input change event: %o', target.value);
     // console.debug('Type of the input change event: %o', typeof target.value);
 
-    this.webSocketsService.sendAccountBalanceRequest(target.value);
+    this.webSocketsService.sendAccountBalanceRequestAndSubscription(target.value);
   }
 }
