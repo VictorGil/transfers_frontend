@@ -1,0 +1,8 @@
+<div *ngIf="transfers.length > 0" class="bold">
+  Transfers
+</div>
+<ul>
+    <li *ngFor="let transfer of transfers; let i = index; trackBy: trackByFn">
+      {{i}} {{transfer.id}} ${{transfer.amount}} {{transferTSstring}}
+    </li>
+</ul>

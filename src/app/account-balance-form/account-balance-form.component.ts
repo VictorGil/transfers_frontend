@@ -10,8 +10,8 @@ import { InputDisplayCommService} from '../inputDisplayComm.service';
 })
 export class AccountBalanceFormComponent {
 
-  private webSocketsService: WebSocketsService;
-  private inputDisplayCommService: InputDisplayCommService;
+  private readonly webSocketsService: WebSocketsService;
+  private readonly inputDisplayCommService: InputDisplayCommService;
 
   constructor(webSocketsService: WebSocketsService,
     inputDisplayCommService: InputDisplayCommService) {
@@ -25,6 +25,6 @@ export class AccountBalanceFormComponent {
     // console.debug('Type of the input change event: %o', typeof target.value);
 
     this.inputDisplayCommService.clearBalance();
-    this.webSocketsService.sendAccountBalanceRequestAndSubscription(target.value);
+    this.webSocketsService.sendAccountBalanceRequestAndSubscriptions(target.value);
   }
 }

@@ -19,8 +19,8 @@ import { Observer} from 'rxjs';
 
   private currentBalanceVersion: number;
 
-  private webSocketsService: WebSocketsService;
-  private inputDisplayCommService: InputDisplayCommService;
+  private readonly webSocketsService: WebSocketsService;
+  private readonly inputDisplayCommService: InputDisplayCommService;
 
   constructor(webSocketsService: WebSocketsService,
       inputDisplayCommService: InputDisplayCommService) {

@@ -9,6 +9,7 @@ import { AccountBalance } from './entities/accountBalance';
 import { AccountBalanceRequest } from './entities/accountBalanceRequest';
 import { TransferReceived } from './entities/transferReceived';
 import { Transfer } from './entities/transfer';
+import { TransfersSubscriptionRequest } from './entities/transfersSubscriptionRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -20,12 +21,12 @@ export class WebSocketsService {
   private balanceResponseSubject: Subject<AccountBalance>;
   private balanceUpdateSubject: Subject<AccountBalance>;
 
-  private transferResponseSubject: Subject<Transfer>;
+  private transferReceivedSubject: Subject<Transfer>;
 
   constructor(private appConfigService: AppConfigService) {
     this.balanceResponseSubject = new Subject<AccountBalance>();
     this.balanceUpdateSubject = new Subject<AccountBalance>();
-    this.transferResponseSubject = new Subject<Transfer>();
+    this.transferReceivedSubject = new Subject<Transfer>();
   }
 
   public start(): void {
@@ -45,6 +46,10 @@ export class WebSocketsService {
 
   public subscribeToBalanceUpdates(observer: Observer<AccountBalance>): void {
     this.balanceUpdateSubject.subscribe(observer);
+  }
+
+  public subscribeToTransfers(observer: Observer<Transfer>): void {
+    this.transferReceivedSubject.subscribe(observer);
   }
 
   private connect(url: string): void {
@@ -98,7 +103,7 @@ export class WebSocketsService {
           self.balanceUpdateSubject.next(accountBalance);
         }
       } else {
-        if (messageWrapper.type === MessageType.TRANSFER_DATA_RESPONSE) {
+        if (messageWrapper.type === MessageType.TRANSFER_DATA) {
           let transferReceived: TransferReceived;
           try {
             transferReceived = JSON.parse(messageWrapper.payload);
@@ -108,8 +113,8 @@ export class WebSocketsService {
           }
 
           const transfer: Transfer = new Transfer(transferReceived);
-          console.debug('Transfer message received: %o', transfer);
-          self.transferResponseSubject.next(transfer);
+          console.debug('Transfer data message received: %o', transfer);
+          self.transferReceivedSubject.next(transfer);
 
         } else {
           console.error('Invalid message type: %s', messageWrapper.type);
@@ -128,9 +133,10 @@ export class WebSocketsService {
     };
   }
 
-  public sendAccountBalanceRequestAndSubscription(accountId: string): void {
+  public sendAccountBalanceRequestAndSubscriptions(accountId: string): void {
     this.sendAccountBalanceRequest(accountId);
     this.sendAccountBalanceSubscriptionRequest(accountId);
+    this.sendTransfersSubscriptionRequest(accountId);
   }
 
   private sendAccountBalanceRequest(accountId: string): void {
@@ -145,19 +151,17 @@ export class WebSocketsService {
     this.send(message);
   }
 
+  private sendTransfersSubscriptionRequest(accountId: string): void {
+    const request: TransfersSubscriptionRequest = new TransfersSubscriptionRequest(accountId);
+    const message: MessageWrapper = new MessageWrapper(MessageType.TRANSFER_DATA_SUBSCRIPTION, request);
+    this.send(message);
+  }
+
   private send(message: MessageWrapper) {
     try {
       this.webSocket.send(JSON.stringify(message));
     } catch (error) {
       console.error('Sending message failed.\nMessage:\n%o\nError:\n%o', message, error);
     }
-  }
-
-  public subscribeToNewTransfers(accountIds: Array<string>): void {
-    // TODO
-  }
-
-  public sendTransferInfoRequest(transferId: string): void {
-    // TODO
   }
 }

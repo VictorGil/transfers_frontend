@@ -10,12 +10,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatFormFieldModule, MatInputModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DisplayBalanceComponent } from './display-balance/display-balance.component';
+import { DisplayTransfersComponent } from './display-transfers/display-transfers.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccountBalanceFormComponent,
-    DisplayBalanceComponent
+    DisplayBalanceComponent,
+    DisplayTransfersComponent
   ],
   imports: [
     BrowserModule,
