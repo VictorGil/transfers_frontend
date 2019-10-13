@@ -103,7 +103,7 @@ export class WebSocketsService {
           self.balanceUpdateSubject.next(accountBalance);
         }
       } else {
-        if (messageWrapper.type === MessageType.TRANSFER_DATA) {
+        if (messageWrapper.type === MessageType.TRANSFER_DATA_UPDATE) {
           let transferReceived: TransferReceived;
           try {
             transferReceived = JSON.parse(messageWrapper.payload);
