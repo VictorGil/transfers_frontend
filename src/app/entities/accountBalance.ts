@@ -1,3 +1,6 @@
+// Analogous Javqa class in the backend:
+// https://github.com/VictorGil/transfers_api/blob/master/src/main/java/net/devaction/entity/AccountBalanceEntity.java
+
 export class AccountBalance {
 
   readonly accountId: string;
