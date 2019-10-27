@@ -15,7 +15,7 @@ export class Transfer {
 
     this.transferTS = transferReceived.transferTS;
     const transferDate: Date = new Date(0);
-    transferDate.setUTCSeconds(this.transferTS);
+    transferDate.setUTCMilliseconds(this.transferTS);
     this.transferTSstring = transferDate.toString();
   }
 }
