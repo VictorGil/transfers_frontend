@@ -3,11 +3,11 @@ h2 {
 }
 
 h2.blue {
-  font-weight:normal;
+  font-weight: normal;
   color: blue;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 .bold{
-  font-weight:bold;
+  font-weight: bold;
 }

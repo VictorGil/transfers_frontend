@@ -34,6 +34,8 @@ export class DisplayTransfersComponent implements OnInit {
 
     const accountIdEnteredObserver: Observer<string> = {
       next: function(accountId: string): void {
+        // Empty the array
+        self.transfers.length = 0;
         self.currentAccountId = accountId;
       },
 
@@ -47,8 +49,7 @@ export class DisplayTransfersComponent implements OnInit {
     };
     this.inputDisplayCommService.subscribeToAccountIdEntered(accountIdEnteredObserver);
 
-    // Empty the array
-    this.transfers.length = 0;
+
 
     const transferReceivedObserver: Observer<Transfer> = {
       next: function(transfer: Transfer): void {
@@ -68,7 +69,7 @@ export class DisplayTransfersComponent implements OnInit {
   }
 
   private process(transfer: Transfer): void {
-    if (transfer.accountId === this.currentAccountId) {
+    if (transfer.accountId !== this.currentAccountId) {
       console.error('The account id of the received transfer object is not the expected one, '
           + 'expected: ' + this.currentAccountId + ', received: ' + transfer.accountId );
       return;

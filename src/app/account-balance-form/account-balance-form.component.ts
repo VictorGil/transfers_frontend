@@ -25,6 +25,7 @@ export class AccountBalanceFormComponent {
     // console.debug('Type of the input change event: %o', typeof target.value);
 
     this.inputDisplayCommService.clearBalance();
+    this.inputDisplayCommService.accountIdEntered(target.value);
     this.webSocketsService.sendAccountBalanceRequestAndSubscriptions(target.value);
   }
 }
