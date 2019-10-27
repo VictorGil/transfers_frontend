@@ -3,6 +3,6 @@
 </div>
 <ul>
     <li *ngFor="let transfer of transfers; let i = index; trackBy: trackByFn">
-      {{i}} {{transfer.id}} ${{transfer.amount}} {{transferTSstring}}
+      {{i}} {{transfer.id}} ${{transfer.amount}} - {{transfer.transferTSstring}}
     </li>
 </ul>
