@@ -75,7 +75,17 @@ export class DisplayTransfersComponent implements OnInit {
     }
 
     this.transfers.push(transfer);
-    this.transfers.sort((transfer1, transfer2) => transfer1.id.localeCompare(transfer2.id));
+    this.transfers.sort((transfer1, transfer2) => {
+          if (transfer1.transferTS > transfer2.transferTS) {
+            return 1;
+          }
+
+          if (transfer1.transferTS < transfer2.transferTS) {
+            return -1;
+          }
+
+          return 0;
+        });
   }
 
   trackByFn(index: number, transfer: Transfer): string {
