@@ -1,7 +1,13 @@
-h3 {
+h2 {
   margin-top: 0.0em;    
-  color: blue;
 }
+
+h2.blue {
+  font-weight:normal;
+  color: blue;
+  font-weight:bold;
+}
+
 .bold{
   font-weight:bold;
 }
