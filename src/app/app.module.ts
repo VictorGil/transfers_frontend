@@ -7,7 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AccountBalanceFormComponent } from './account-balance-form/account-balance-form.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import { MatFormFieldModule, MatInputModule, MatListModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DisplayBalanceComponent } from './display-balance/display-balance.component';
 import { DisplayTransfersComponent } from './display-transfers/display-transfers.component';
@@ -25,6 +25,7 @@ import { DisplayTransfersComponent } from './display-transfers/display-transfers
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatListModule,
     BrowserAnimationsModule
   ],
   providers: [

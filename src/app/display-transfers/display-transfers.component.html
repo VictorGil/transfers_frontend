@@ -3,8 +3,8 @@
 </div>
 <div class="style01">
   <ul>
-    <li *ngFor="let transfer of transfers; let i = index; trackBy: trackByFn">
+    <mat-list-item *ngFor="let transfer of transfers; let i = index; trackBy: trackByFn">
       {{i}}&#9;<b>${{transfer.amount}}</b>&#9;{{transfer.id}} - {{transfer.transferTSstring}}
-    </li>
+    </mat-list-item>
   </ul>
 </div>
