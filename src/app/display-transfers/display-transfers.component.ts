@@ -44,12 +44,10 @@ export class DisplayTransfersComponent implements OnInit {
       },
 
       complete: function(): void {
-        console.log('Observer completed, no more account ids coming from the user');
+        console.info('Observer completed, no more account ids coming from the user');
       }
     };
     this.inputDisplayCommService.subscribeToAccountIdEntered(accountIdEnteredObserver);
-
-
 
     const transferReceivedObserver: Observer<Transfer> = {
       next: function(transfer: Transfer): void {
@@ -61,7 +59,7 @@ export class DisplayTransfersComponent implements OnInit {
       },
 
       complete: function(): void {
-        console.log('Observer completed, no more Transfer data messages coming from the server');
+        console.info('Observer completed, no more Transfer data messages coming from the server');
       }
 
     };
@@ -69,6 +67,7 @@ export class DisplayTransfersComponent implements OnInit {
   }
 
   private process(transfer: Transfer): void {
+    console.debug('Transfer object received by the transferReceivedObserver: %o', transfer);
     if (transfer.accountId !== this.currentAccountId) {
       console.error('The account id of the received transfer object is not the expected one, '
           + 'expected: ' + this.currentAccountId + ', received: ' + transfer.accountId );
@@ -87,6 +86,7 @@ export class DisplayTransfersComponent implements OnInit {
 
           return 0;
         });
+    console.debug('"transfers" arrays has been sorted, length: %d', this.transfers.length);
   }
 
   trackByFn(index: number, transfer: Transfer): string {
